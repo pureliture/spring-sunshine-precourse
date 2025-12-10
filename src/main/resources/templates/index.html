@@ -4,15 +4,15 @@
 <form action="/weather" method="get">
     <label for="city">도시:</label>
     <select id="city" name="city">
-        <option value="seoul">Seoul</option>
-        <option value="tokyo">Tokyo</option>
-        <option value="new york">New York</option>
-        <option value="paris">Paris</option>
-        <option value="london">London</option>
+        <option value="Seoul" th:selected="${selected == 'Seoul'}">Seoul</option>
+        <option value="Tokyo" th:selected="${selected == 'Tokyo'}">Tokyo</option>
+        <option value="NewYork" th:selected="${selected == 'NewYork'}">NewYork</option>
+        <option value="Paris" th:selected="${selected == 'Paris'}">Paris</option>
+        <option value="London" th:selected="${selected == 'London'}">London</option>
     </select>
     <button type="submit">확인</button>
 </form>
 
-<p>도시: <span th:text="${city}">도시명</span></p>
+<p>날씨: <span th:text="${weather}"></span></p>
 </body>
 </html>
