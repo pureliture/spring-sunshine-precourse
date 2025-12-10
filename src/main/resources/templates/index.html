@@ -1,0 +1,18 @@
+<html>
+<body>
+<h1>날시 정보 조회</h1>
+<form action="/weather" method="get">
+    <label for="city">도시:</label>
+    <select id="city" name="city">
+        <option value="seoul">Seoul</option>
+        <option value="tokyo">Tokyo</option>
+        <option value="new york">New York</option>
+        <option value="paris">Paris</option>
+        <option value="london">London</option>
+    </select>
+    <button type="submit">확인</button>
+</form>
+
+<p>도시: <span th:text="${city}">도시명</span></p>
+</body>
+</html>
