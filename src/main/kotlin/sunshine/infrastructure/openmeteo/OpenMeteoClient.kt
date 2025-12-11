@@ -1,9 +1,8 @@
 package sunshine.infrastructure.openmeteo
 
-import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientException
-import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import sunshine.common.BusinessException
 import sunshine.common.ErrorCode
@@ -12,9 +11,9 @@ import sunshine.common.ErrorCode
  * OpenMeteo API와 통신하여 날씨 정보를 가져오는 클라이언트.
  */
 @Component
-class OpenMeteoClient(builder: RestTemplateBuilder) {
+class OpenMeteoClient(builder: RestClient.Builder) {
 
-    private val restTemplate: RestTemplate = builder.build()
+    private val restClient: RestClient = builder.build()
 
     /**
      * 위도와 경도를 사용하여 날씨 정보를 조회한다.
@@ -33,7 +32,10 @@ class OpenMeteoClient(builder: RestTemplateBuilder) {
             .toUriString()
 
         try {
-            return restTemplate.getForObject(url, OpenMeteoResponse::class.java)!!
+            return restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(OpenMeteoResponse::class.java)!!
         } catch (e: RestClientException) {
             throw BusinessException(ErrorCode.EXTERNAL_API_ERROR, e)
         }
