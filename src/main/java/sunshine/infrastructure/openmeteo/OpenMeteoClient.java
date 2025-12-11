@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import sunshine.api.common.BusinessException;
-import sunshine.api.common.ErrorCode;
+import sunshine.common.BusinessException;
+import sunshine.common.ErrorCode;
 
 @Component
 public class OpenMeteoClient {

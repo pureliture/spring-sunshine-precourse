@@ -1,4 +1,4 @@
-package sunshine.api.common;
+package sunshine.common;
 
 public class BusinessException extends RuntimeException {
     private final ErrorCode errorCode;

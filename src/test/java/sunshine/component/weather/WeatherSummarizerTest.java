@@ -2,6 +2,7 @@ package sunshine.component.weather;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import sunshine.weather.component.WeatherSummarizer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

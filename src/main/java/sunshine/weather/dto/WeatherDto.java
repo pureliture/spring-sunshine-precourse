@@ -1,4 +1,4 @@
-package sunshine.application.weather;
+package sunshine.weather.dto;
 
 import sunshine.infrastructure.openmeteo.OpenMeteoResponse;
 
