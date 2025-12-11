@@ -1,4 +1,4 @@
-package sunshine.api.common;
+package sunshine.common;
 
 import org.springframework.http.HttpStatus;
 

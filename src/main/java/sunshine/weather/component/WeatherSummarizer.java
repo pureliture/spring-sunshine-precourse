@@ -1,4 +1,4 @@
-package sunshine.component.weather;
+package sunshine.weather.component;
 
 import org.springframework.stereotype.Component;
 import java.util.Map;

@@ -6,18 +6,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sunshine.component.city.CityCoordinateMapper;
-import sunshine.component.city.Coordinate;
-import sunshine.component.weather.WeatherSummarizer;
+import sunshine.city.component.CityCoordinateMapper;
+import sunshine.city.component.Coordinate;
+import sunshine.weather.component.WeatherSummarizer;
 import sunshine.infrastructure.openmeteo.OpenMeteoClient;
 import sunshine.infrastructure.openmeteo.OpenMeteoResponse;
+import sunshine.weather.dto.WeatherDto;
+import sunshine.weather.service.WeatherService;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class WeatherFacadeTest {
+class WeatherServiceTest {
 
     @Mock
     private CityCoordinateMapper cityCoordinateMapper;
@@ -26,7 +27,7 @@ class WeatherFacadeTest {
     @Mock
     private WeatherSummarizer weatherSummarizer;
     @InjectMocks
-    private WeatherFacade weatherFacade;
+    private WeatherService weatherService;
 
     @Test
     @DisplayName("Successfully orchestrates weather retrieval")
@@ -45,7 +46,7 @@ class WeatherFacadeTest {
         given(weatherSummarizer.summarize(city, 20.0, 5.0, 0)).willReturn(summary);
 
         // When
-        WeatherDto result = weatherFacade.getWeather(city);
+        WeatherDto result = weatherService.getWeather(city);
 
         // Then
         assertThat(result.summary()).isEqualTo(summary);

@@ -1,28 +1,22 @@
-package sunshine.application.weather;
+package sunshine.weather.service;
 
-import sunshine.component.city.CityCoordinateMapper;
-import sunshine.component.city.Coordinate;
-import sunshine.component.weather.WeatherSummarizer;
+import lombok.RequiredArgsConstructor;
+import sunshine.city.component.CityCoordinateMapper;
+import sunshine.city.component.Coordinate;
+import sunshine.weather.component.WeatherSummarizer;
 import sunshine.infrastructure.openmeteo.OpenMeteoClient;
 import sunshine.infrastructure.openmeteo.OpenMeteoResponse;
 import org.springframework.stereotype.Service;
+import sunshine.weather.dto.WeatherDto;
 
+
+@RequiredArgsConstructor
 @Service
-public class WeatherFacade {
+public class WeatherService {
 
     private final CityCoordinateMapper cityCoordinateMapper;
     private final OpenMeteoClient openMeteoClient;
     private final WeatherSummarizer weatherSummarizer;
-
-    public WeatherFacade(
-        CityCoordinateMapper cityCoordinateMapper,
-        OpenMeteoClient openMeteoClient,
-        WeatherSummarizer weatherSummarizer
-    ) {
-        this.cityCoordinateMapper = cityCoordinateMapper;
-        this.openMeteoClient = openMeteoClient;
-        this.weatherSummarizer = weatherSummarizer;
-    }
 
     public WeatherDto getWeather(String city) {
         Coordinate coordinate = cityCoordinateMapper.getCoordinate(city);
