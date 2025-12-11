@@ -29,18 +29,11 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    // lombok
-    compileOnly("org.projectlombok:lombok:1.18.42")
-    annotationProcessor("org.projectlombok:lombok:1.18.42")
-
-    testCompileOnly("org.projectlombok:lombok:1.18.42")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
-
-    // runtimeOnly("com.h2database:h2")
-    // runtimeOnly("com.mysql:mysql-connector-j")
+    implementation("com.h2database:h2")
+    implementation("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.junit.platform:junit-platform-launcher")
 }
 
 kotlin {
