@@ -1,28 +1,32 @@
 ## 일반 원칙
 
 * **보수성:** 새로운 외부 라이브러리/프레임워크 추가 금지(명시 요청 시만).
-* **컴포넌트 기반 개발(CBD):** 중복/공통 로직을 **작은 컴포넌트**로 모듈화하고, 상위 **Facade(파사드)** 컴포넌트가 이들을 **조합**하여 기능을 완성한다.
-* **층 분리:** Controller ↔ Facade(Service) ↔ Repository/Adapter. 비즈니스 조합은 Facade에서만.
+* **도메인-서비스 협업:** Domain Layer는 **컴포넌트 기반**으로 설계하고, Service Layer가 **Facade 역할**로 이들을 **조합**하여 기능을 완성한다.
+* **층 분리:** Controller ↔ Service(Facade 역할) ↔ Repository/Adapter. 비즈니스 조합은 Service(Facade 역할)에서만.
 * **DTO 우선:** API 입출력은 DTO만 사용(엔티티 노출 금지).
 * **검증 선행:** 요청 DTO에 Bean Validation. 실패 시 **공통 응답**으로 오류 반환.
 * **예외 일원화:** 예외 → ErrorCode → HttpStatus → **공통 응답** 매핑.
-* **트랜잭션:** Facade(Service) 계층에 `@Transactional` (조회는 `readOnly = true`).
+* **트랜잭션:** Service(Facade 역할) 계층에 `@Transactional` (조회는 `readOnly = true`).
 * **로깅:** 에러 로그에 컨텍스트(요청/상관관계 ID 등), 민감정보 금지.
 * **명확성:** 이름은 역할이 드러나게, 주석은 *왜*에 집중.
 
 ---
 
-## 아키텍처 & 패키징 (CBD + Facade)
+## 아키텍처 & 패키징 (Domain 컴포넌트 + Service Facade)
 
-권장 기본 구조:
+권장 기본 구조(루트 패키지 `sunshine` 기준):
 
 ```
-com.example.project
-├─ api              // controllers, request/response DTOs
-├─ application      // facades/services (transactional orchestration)
-├─ component        // small reusable components (validators, mappers, calculators, policies, converters, enrichers ...)
-├─ domain           // entities/aggregates, domain services, repository ports
-└─ infrastructure   // JPA adapters, external clients, configs
+sunshine
+├─ common            // 공통 응답/에러, 공용 설정
+├─ infrastructure    // 외부 연동, 클라이언트, 기술 어댑터
+├─ weather           // 도메인 예시 1 (도메인별 패키지)
+│  ├─ api            // controllers, request/response DTOs
+│  ├─ service        // Service Layer, Facade 역할의 오케스트레이션(@Transactional)
+│  ├─ component      // 작은 컴포넌트(검증, 매핑, 계산, 정책 등)
+│  ├─ domain         // 엔티티/밸류, 도메인 서비스, 도메인 모델
+│  └─ repository     // 포트 정의(리포지토리 인터페이스)
+└─ city              // 도메인 예시 2 (동일한 레이어드 구조)
 ```
 
 ### 컴포넌트(작은 컴포넌트) 원칙
@@ -323,43 +327,6 @@ class SampleRepositoryTest {
 
 ---
 
-## 부록: CBD 구성 예시 스케치
-
-```java
-// 작은 컴포넌트(규칙)
-@Component
-class NameDuplicationPolicy {
-  private final SampleRepository repo;
-  NameDuplicationPolicy(SampleRepository repo) { this.repo = repo; }
-  boolean exists(String normalizedName) { return repo.existsByName(normalizedName); }
-}
-
-// 작은 컴포넌트(정규화)
-@Component
-class NameNormalizer {
-  String normalize(String raw) { return raw == null ? null : raw.trim().toLowerCase(); }
-}
-
-// Facade(파사드)
-@Service
-@RequiredArgsConstructor
-@Transactional
-class SampleFacade {
-  private final NameNormalizer normalizer;
-  private final NameDuplicationPolicy duplicationPolicy;
-  private final SampleRepository repo;
-  public SampleDto create(CreateCommand cmd) {
-    var name = normalizer.normalize(cmd.name());
-    if (duplicationPolicy.exists(name)) throw new DomainConflictException("Name already exists");
-    var entity = new SampleEntity(null, name);
-    var saved = repo.save(entity);
-    return new SampleDto(saved.getId(), saved.getName());
-  }
-}
-```
-
----
-
 ## 공통 응답 details 규약
 
 다음 표준 키를 우선 사용한다. 가능한 한 일관된 스키마를 유지한다.
@@ -453,17 +420,6 @@ class SampleFacade {
 - 시간 의존성 제거: Clock 주입/추상화로 테스트 안정화.
 - 외부 HTTP 어댑터 테스트: MockRestServiceServer로 성공/타임아웃/5xx/에러 매핑 시나리오 검증.
 - 커버리지 목표(권장): 핵심 컴포넌트·파사드 80%+, 라인 70%+, 브랜치 60%+.
-
----
-
-## 패키지 네이밍 매핑(사이드바 프로젝트)
-
-- com.sidebeam.api: 컨트롤러/Request-Response DTO
-- com.sidebeam.application: Facade(Service) 계층(@Transactional)
-- com.sidebeam.component: Validator/Mapper/Policy/Enricher 등 작은 컴포넌트
-- com.sidebeam.domain: 엔티티/도메인 서비스/리포지토리 포트
-- com.sidebeam.infrastructure: JPA 어댑터, 외부 클라이언트, 설정
-- GitLab 연동: com.sidebeam.external.gitlab.service, GitLabStorageFileRetriever 등은 infrastructure/adapter로 분류. 포트 인터페이스는 domain 또는 application 경계에 둔다.
 
 ---
 
