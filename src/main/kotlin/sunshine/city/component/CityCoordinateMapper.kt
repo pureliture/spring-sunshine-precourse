@@ -15,10 +15,6 @@ class CityCoordinateMapper(
 
     /**
      * 주어진 도시 이름에 해당하는 좌표를 반환한다.
-     *
-     * @param cityName 좌표를 조회할 도시 이름
-     * @return 해당 도시의 좌표 (위도, 경도)
-     * @throws BusinessException 지원하지 않는 도시일 경우
      */
     fun getCoordinate(cityName: String?): Coordinate {
         requireNotNull(cityName) { "City name cannot be null" }

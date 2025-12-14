@@ -12,8 +12,5 @@ import jakarta.persistence.Table
 class WeatherCode(
     @Id
     val code: Int,
-
     val description: String
-) {
-    protected constructor() : this(code = 0, description = "")
-}
+)

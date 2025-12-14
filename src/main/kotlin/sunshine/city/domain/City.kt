@@ -17,21 +17,10 @@ class City(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
     val name: String,
-
     val latitude: Double,
-
     val longitude: Double,
-
     @ManyToOne
     @JoinColumn(name = "country_id")
     val country: Country
-) {
-    protected constructor() : this(
-        name = "",
-        latitude = 0.0,
-        longitude = 0.0,
-        country = Country(name = "")
-    )
-}
+)
