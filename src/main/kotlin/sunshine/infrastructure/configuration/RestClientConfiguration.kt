@@ -24,4 +24,9 @@ class RestClientConfiguration {
         return RestClient.builder()
             .requestFactory(requestFactory)
     }
+
+    @Bean
+    fun restClient(builder: RestClient.Builder): RestClient {
+        return builder.build()
+    }
 }

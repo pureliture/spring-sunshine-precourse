@@ -22,7 +22,8 @@ class OpenMeteoClientTest {
         // given
         val builder = RestClient.builder()
         val mockServer = MockRestServiceServer.bindTo(builder).build()
-        val client = OpenMeteoClient(builder)
+        val restClient = builder.build()
+        val client = OpenMeteoClient(restClient)
 
         val jsonResponse = """
             {
@@ -63,7 +64,6 @@ class OpenMeteoClientTest {
 
         // then
         assertNotNull(response)
-        // Latitude and Longitude are not mapped in OpenMeteoResponse DTO
         assertEquals(15.0, response.current.temperature2m)
         mockServer.verify()
     }
@@ -73,7 +73,8 @@ class OpenMeteoClientTest {
         // given
         val builder = RestClient.builder()
         val mockServer = MockRestServiceServer.bindTo(builder).build()
-        val client = OpenMeteoClient(builder)
+        val restClient = builder.build()
+        val client = OpenMeteoClient(restClient)
 
         mockServer.expect(requestTo("https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=127.0&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m"))
             .andExpect(method(HttpMethod.GET))

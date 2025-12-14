@@ -11,9 +11,7 @@ import sunshine.common.ErrorCode
  * OpenMeteo API와 통신하여 날씨 정보를 가져오는 클라이언트.
  */
 @Component
-class OpenMeteoClient(builder: RestClient.Builder) {
-
-    private val restClient: RestClient = builder.build()
+class OpenMeteoClient(private val restClient: RestClient) {
 
     /**
      * 위도와 경도를 사용하여 날씨 정보를 조회한다.
