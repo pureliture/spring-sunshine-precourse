@@ -15,8 +15,5 @@ class Country(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
     val name: String
-) {
-    protected constructor() : this(name = "")
-}
+)

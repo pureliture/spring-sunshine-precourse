@@ -1,5 +1,6 @@
 package sunshine.common
 
+import jakarta.validation.ConstraintViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -14,6 +15,17 @@ class GlobalExceptionHandler {
     fun handleBusinessException(ex: BusinessException): ResponseEntity<ApiResponse<Void>> {
         val errorResponse = ErrorResponse.of(ex.errorCode, ex.message, emptyMap())
         return ResponseEntity.status(ex.errorCode.status)
+            .body(ApiResponse.error(errorResponse))
+    }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolation(ex: ConstraintViolationException): ResponseEntity<ApiResponse<Void>> {
+        val details = ex.constraintViolations.associate { violation ->
+            violation.propertyPath.toString() to (violation.message ?: "Invalid value")
+        }
+        val message = ex.constraintViolations.firstOrNull()?.message ?: ErrorCode.VALIDATION_ERROR.defaultMessage
+        val errorResponse = ErrorResponse.of(ErrorCode.VALIDATION_ERROR, message, details)
+        return ResponseEntity.status(ErrorCode.VALIDATION_ERROR.status)
             .body(ApiResponse.error(errorResponse))
     }
 

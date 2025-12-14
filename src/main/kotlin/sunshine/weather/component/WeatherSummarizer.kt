@@ -14,12 +14,6 @@ class WeatherSummarizer(
 
     /**
      * 주어진 날씨 정보를 바탕으로 요약 문장을 생성한다.
-     *
-     * @param city        도시 이름
-     * @param temp        현재 기온
-     * @param windSpeed   풍속
-     * @param weatherCode 날씨 상태 코드
-     * @return 날씨 요약 문장
      */
     fun summarize(city: String, temp: Double, windSpeed: Double, weatherCode: Int): String {
         val weatherStatus = weatherCodeRepository.findByIdOrNull(weatherCode)

@@ -18,9 +18,6 @@ class WeatherService(
 
     /**
      * 도시 이름을 입력받아 날씨 정보를 반환한다.
-     *
-     * @param city 도시 이름
-     * @return 날씨 정보 DTO
      */
     fun getWeather(city: String): WeatherDto {
         val coordinate = cityCoordinateMapper.getCoordinate(city)

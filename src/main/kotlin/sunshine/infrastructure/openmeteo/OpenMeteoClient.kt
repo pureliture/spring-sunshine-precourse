@@ -3,6 +3,7 @@ package sunshine.infrastructure.openmeteo
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientException
+import org.springframework.web.client.body
 import org.springframework.web.util.UriComponentsBuilder
 import sunshine.common.BusinessException
 import sunshine.common.ErrorCode
@@ -15,11 +16,6 @@ class OpenMeteoClient(private val restClient: RestClient) {
 
     /**
      * 위도와 경도를 사용하여 날씨 정보를 조회한다.
-     *
-     * @param latitude 위도
-     * @param longitude 경도
-     * @return 조회된 날씨 정보
-     * @throws BusinessException API 호출 실패 시 발생
      */
     fun fetchWeather(latitude: Double, longitude: Double): OpenMeteoResponse {
         val url = UriComponentsBuilder.fromHttpUrl(BASE_URL)
@@ -33,7 +29,7 @@ class OpenMeteoClient(private val restClient: RestClient) {
             return restClient.get()
                 .uri(url)
                 .retrieve()
-                .body(OpenMeteoResponse::class.java)!!
+                .body<OpenMeteoResponse>()!!
         } catch (e: RestClientException) {
             throw BusinessException(ErrorCode.EXTERNAL_API_ERROR, e)
         }

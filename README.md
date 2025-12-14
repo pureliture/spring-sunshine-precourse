@@ -9,11 +9,19 @@
 6. **설정 외부화**: 도시 좌표 및 날씨 코드를 프로퍼티 파일로 분리하여 관리한다.
 
 ## 구현 전략
-* **아키텍처**: 가이드라인에 따라 CBD(Component Based Development) + Facade 패턴을 적용한다.
+1. Jules, Codex 2개의 Sandboxed AI Coding Agent를 활용하여 초기 코드 개발
+2. guideline 파일을 통해 Backend Architecture, 개발 규칙 등을 사전에 정의하고 Agent가 이를 참조하여 개발
+3. 가능한 사전에 `build.gradle.kts`에 정의되어있던 의존성울 모두 사용하여 기능을 구현
+4. Agent가 개발한 코드를 검토하고 필요 시 리팩토링 수행
+
+## 구현 상세
+* **아키텍처**: Domain Layer는 컴포넌트 기반, Service Layer가 Facade 역할로 조합하는 구조를 적용한다.
     * `api`: 컨트롤러 및 요청/응답 DTO (검증 및 위임).
-    * `application`: Facade (여러 컴포넌트를 조합하여 비즈니스 로직 수행).
+    * `service`: Service Layer, Facade 역할로 여러 컴포넌트를 오케스트레이션.
     * `component`: 단일 책임을 가진 작은 컴포넌트들 (좌표 매핑, 요약 생성 등).
-    * `infrastructure`: 외부 API 통신 (Open-Meteo Client).
+    * `domain`: 도메인 모델, 도메인 서비스.
+    * `repository`: 도메인 리포지토리 포트 정의.
+    * `infrastructure`: 외부 API 통신 (Open-Meteo Client) 등 기술 어댑터.
 * **제약 사항 준수**:
     * `else`, `switch`, `ternary operator` 사용 금지.
     * 들여쓰기 2단계 제한.

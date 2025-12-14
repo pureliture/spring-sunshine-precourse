@@ -1,5 +1,7 @@
 package sunshine.weather.controller
 
+import jakarta.validation.constraints.NotBlank
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -19,14 +21,11 @@ class WeatherController(
 
     /**
      * 특정 도시의 날씨 정보를 조회한다.
-     *
-     * @param city 도시 이름
-     * @return 날씨 정보 응답
-     * @throws IllegalArgumentException 도시 이름이 비어있을 경우
      */
     @GetMapping
-    fun getWeather(@RequestParam city: String?): ApiResponse<WeatherDto> {
-        require(!city.isNullOrBlank()) { "City name is required" }
+    fun getWeather(@RequestParam
+                   @NotBlank(message = "City name is required")
+                   city: String): ApiResponse<WeatherDto> {
         return ApiResponse.ok(weatherService.getWeather(city))
     }
 }
