@@ -1,11 +1,11 @@
-package sunshine.service;
+package sunshine.weather.service;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import sunshine.enums.WmoCode;
-import sunshine.feign.client.CoordinatesClient;
-import sunshine.feign.client.WeatherClient;
+import sunshine.city.domain.CityClient;
+import sunshine.weather.domain.WeatherClient;
+import sunshine.weather.enums.WmoCode;
 import sunshine.feign.dto.FeignCoordinatesResponse;
 import sunshine.feign.dto.FeignWeatherResponse;
 
@@ -13,11 +13,12 @@ import sunshine.feign.dto.FeignWeatherResponse;
 @RequiredArgsConstructor
 public class WeatherService {
 
-	private final CoordinatesClient coordinatesClient;
+	private final CityClient cityClient;
 	private final WeatherClient weatherClient;
 
 	public String getWeather(String city) {
-		FeignCoordinatesResponse coordinates = coordinatesClient.getCoordinates(city).getFirst();
+		FeignCoordinatesResponse coordinates = cityClient.getCoordinates(city).getFirst();
+
 		FeignWeatherResponse currentWeather = weatherClient.getWeather(coordinates.lat(), coordinates.lon(),
 			"temperature_2m,relative_humidity_2m,apparent_temperature,weather_code");
 

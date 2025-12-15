@@ -1,4 +1,4 @@
-package sunshine.enums;
+package sunshine.weather.enums;
 
 import java.util.Set;
 

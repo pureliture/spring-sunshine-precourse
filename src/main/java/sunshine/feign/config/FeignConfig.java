@@ -1,4 +1,4 @@
-package sunshine.config;
+package sunshine.feign.config;
 
 import java.util.concurrent.TimeUnit;
 
