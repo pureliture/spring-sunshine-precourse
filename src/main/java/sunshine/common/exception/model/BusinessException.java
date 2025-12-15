@@ -1,4 +1,4 @@
-package sunshine.common;
+package sunshine.common.exception.model;
 
 /**
  * 비즈니스 로직에서 발생하는 예외를 처리하는 클래스.

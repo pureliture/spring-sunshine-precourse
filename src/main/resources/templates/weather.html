@@ -34,19 +34,19 @@
                     <h5 class="card-title" th:text="${weather.summary}">Summary</h5>
                     <ul class="list-group list-group-flush mt-3">
                         <li class="list-group-item">
-                            <strong>Temperature:</strong> <span th:text="${weather.current.temperature2m}"></span>°C
+                            <strong>Temperature:</strong> <span th:text="${weather.weather.temperature}"></span>°C
                         </li>
                         <li class="list-group-item">
-                            <strong>Apparent Temperature:</strong> <span th:text="${weather.current.apparentTemperature}"></span>°C
+                            <strong>Apparent Temperature:</strong> <span th:text="${weather.weather.apparentTemperature}"></span>°C
                         </li>
                         <li class="list-group-item">
-                            <strong>Humidity:</strong> <span th:text="${weather.current.relativeHumidity2m}"></span>%
+                            <strong>Humidity:</strong> <span th:text="${weather.weather.humidity}"></span>%
                         </li>
                         <li class="list-group-item">
-                            <strong>Wind Speed:</strong> <span th:text="${weather.current.windSpeed10m}"></span> km/h
+                            <strong>Wind Speed:</strong> <span th:text="${weather.weather.windSpeed}"></span> km/h
                         </li>
                         <li class="list-group-item">
-                            <strong>Weather Code:</strong> <span th:text="${weather.current.weatherCode}"></span>
+                            <strong>Weather Code:</strong> <span th:text="${weather.weather.weatherCode}"></span>
                         </li>
                     </ul>
                 </div>

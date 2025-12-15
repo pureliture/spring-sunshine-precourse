@@ -1,4 +1,4 @@
-package sunshine.common;
+package sunshine.common.exception.aspect;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import sunshine.common.response.ApiResponse;
+import sunshine.common.exception.model.BusinessException;
+import sunshine.common.exception.model.ErrorCode;
+import sunshine.common.response.ErrorResponse;
 
 /**
  * 전역 예외 처리기.

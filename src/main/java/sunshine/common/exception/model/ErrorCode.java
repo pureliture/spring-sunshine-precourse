@@ -1,4 +1,4 @@
-package sunshine.common;
+package sunshine.common.exception.model;
 
 import org.springframework.http.HttpStatus;
 

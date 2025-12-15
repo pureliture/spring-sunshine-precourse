@@ -1,12 +1,12 @@
 package sunshine.weather.dto;
 
-import sunshine.infrastructure.openmeteo.OpenMeteoResponse;
+import sunshine.weather.domain.Weather;
 
 /**
  * 날씨 정보를 반환하기 위한 DTO.
  */
 public record WeatherDto(
-    OpenMeteoResponse.Current current,
+    Weather weather,
     String summary
 ) {
 }

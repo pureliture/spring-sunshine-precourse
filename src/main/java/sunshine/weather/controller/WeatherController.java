@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import sunshine.common.ApiResponse;
+import sunshine.common.response.ApiResponse;
 import sunshine.weather.dto.WeatherDto;
 import sunshine.weather.service.WeatherService;
 
