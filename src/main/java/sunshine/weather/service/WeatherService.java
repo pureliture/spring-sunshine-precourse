@@ -3,9 +3,9 @@ package sunshine.weather.service;
 import org.springframework.stereotype.Service;
 import sunshine.city.component.CityCoordinateMapper;
 import sunshine.city.component.Coordinate;
-import sunshine.infrastructure.openmeteo.OpenMeteoClient;
-import sunshine.infrastructure.openmeteo.OpenMeteoResponse;
 import sunshine.weather.component.WeatherSummarizer;
+import sunshine.weather.domain.Weather;
+import sunshine.weather.domain.WeatherReader;
 import sunshine.weather.dto.WeatherDto;
 
 /**
@@ -15,16 +15,16 @@ import sunshine.weather.dto.WeatherDto;
 public class WeatherService {
 
   private final CityCoordinateMapper cityCoordinateMapper;
-  private final OpenMeteoClient openMeteoClient;
+  private final WeatherReader weatherReader;
   private final WeatherSummarizer weatherSummarizer;
 
   public WeatherService(
       CityCoordinateMapper cityCoordinateMapper,
-      OpenMeteoClient openMeteoClient,
+      WeatherReader weatherReader,
       WeatherSummarizer weatherSummarizer
   ) {
     this.cityCoordinateMapper = cityCoordinateMapper;
-    this.openMeteoClient = openMeteoClient;
+    this.weatherReader = weatherReader;
     this.weatherSummarizer = weatherSummarizer;
   }
 
@@ -34,18 +34,18 @@ public class WeatherService {
   public WeatherDto getWeather(String city) {
     Coordinate coordinate = cityCoordinateMapper.getCoordinate(city);
 
-    OpenMeteoResponse response = openMeteoClient.fetchWeather(
+    Weather weather = weatherReader.read(
         coordinate.latitude(),
         coordinate.longitude()
     );
 
     String summary = weatherSummarizer.summarize(
         city,
-        response.current().temperature2m(),
-        response.current().windSpeed10m(),
-        response.current().weatherCode()
+        weather.temperature(),
+        weather.windSpeed(),
+        weather.weatherCode()
     );
 
-    return new WeatherDto(response.current(), summary);
+    return new WeatherDto(weather, summary);
   }
 }

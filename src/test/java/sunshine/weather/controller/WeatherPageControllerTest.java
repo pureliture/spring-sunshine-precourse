@@ -13,7 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import sunshine.common.BusinessException;
 import sunshine.common.ErrorCode;
-import sunshine.infrastructure.openmeteo.OpenMeteoResponse;
+import sunshine.weather.domain.Weather;
 import sunshine.weather.dto.WeatherDto;
 import sunshine.weather.service.WeatherService;
 
@@ -38,9 +38,9 @@ class WeatherPageControllerTest {
   @Test
   void shouldDisplayWeatherInfoWhenCityIsValid() throws Exception {
     String city = "Seoul";
-    OpenMeteoResponse.Current current = new OpenMeteoResponse.Current(20.0, 50, 22.0, 1, 10.0);
+    Weather weather = new Weather(20.0, 22.0, 50, 10.0, 1);
     String summary = "Sunny in Seoul";
-    WeatherDto weatherDto = new WeatherDto(current, summary);
+    WeatherDto weatherDto = new WeatherDto(weather, summary);
 
     given(weatherService.getWeather(city)).willReturn(weatherDto);
 

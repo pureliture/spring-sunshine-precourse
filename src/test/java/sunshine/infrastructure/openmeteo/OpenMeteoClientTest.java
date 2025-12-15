@@ -13,8 +13,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
-import sunshine.common.BusinessException;
 import sunshine.common.ErrorCode;
+import sunshine.common.infrastructure.exception.RestApiException;
 
 class OpenMeteoClientTest {
 
@@ -24,7 +24,7 @@ class OpenMeteoClientTest {
     RestClient.Builder builder = RestClient.builder();
     MockRestServiceServer mockServer = MockRestServiceServer.bindTo(builder).build();
     RestClient restClient = builder.build();
-    OpenMeteoClient client = new OpenMeteoClient(restClient);
+    OpenMeteoHttpClient client = new OpenMeteoHttpClient(restClient);
 
     String jsonResponse = """
         {
@@ -70,19 +70,19 @@ class OpenMeteoClientTest {
   }
 
   @Test
-  void throwsBusinessExceptionOnApiFailure() {
+  void throwsRestApiExceptionOnApiFailure() {
     // given
     RestClient.Builder builder = RestClient.builder();
     MockRestServiceServer mockServer = MockRestServiceServer.bindTo(builder).build();
     RestClient restClient = builder.build();
-    OpenMeteoClient client = new OpenMeteoClient(restClient);
+    OpenMeteoHttpClient client = new OpenMeteoHttpClient(restClient);
 
     mockServer.expect(requestTo("https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=127.0&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m"))
         .andExpect(method(HttpMethod.GET))
         .andRespond(withServerError());
 
     // when & then
-    BusinessException exception = assertThrows(BusinessException.class, () -> {
+    RestApiException exception = assertThrows(RestApiException.class, () -> {
       client.fetchWeather(37.5, 127.0);
     });
     assertEquals(ErrorCode.EXTERNAL_API_ERROR, exception.getErrorCode());
