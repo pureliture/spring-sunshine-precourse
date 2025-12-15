@@ -7,6 +7,7 @@
 4. **API 응답**: 조회된 날씨 정보와 요약 문장을 JSON 형태로 반환한다.
 5. **예외 처리**: 지원하지 않는 도시나 외부 API 오류 발생 시 정해진 포맷의 에러 응답을 반환한다.
 6. **설정 외부화**: 도시 좌표 및 날씨 코드를 프로퍼티 파일로 분리하여 관리한다.
+7. **회복 탄력성(Resilience)**: 외부 API 호출 시 타임아웃 및 재시도 기능을 통해 네트워크 불안정에 대비한다.
 
 ## 구현 전략
 1. Jules, Codex 2개의 Sandboxed AI Coding Agent를 활용하여 초기 코드 개발
@@ -33,3 +34,6 @@
     * 방어적 코딩(Guard Clauses)을 통해 `else` 제거.
 * **설정 관리**:
     * `CityProperties`, `WeatherProperties` 클래스를 통해 외부 설정(YAML)을 객체로 바인딩하여 사용.
+* **회복 탄력성**:
+    * `RestClient` 설정 시 `HttpClient` 타임아웃(Connect, Response) 적용.
+    * `ClientHttpRequestInterceptor`를 구현하여 실패 시 재시도 로직 적용 (Custom Retry Interceptor).
