@@ -1,4 +1,4 @@
-package sunshine.common;
+package sunshine.common.response;
 
 import java.time.Instant;
 

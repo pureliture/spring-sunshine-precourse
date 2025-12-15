@@ -1,6 +1,6 @@
-package sunshine.common.infrastructure.exception;
+package sunshine.common.exception.model.infrastructure;
 
-import sunshine.common.ErrorCode;
+import sunshine.common.exception.model.ErrorCode;
 
 /**
  * 인프라스트럭처 계층에서 발생하는 모든 예외의 상위 클래스.

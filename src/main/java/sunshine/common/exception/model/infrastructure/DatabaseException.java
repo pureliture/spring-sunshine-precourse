@@ -1,6 +1,6 @@
-package sunshine.common.infrastructure.exception;
+package sunshine.common.exception.model.infrastructure;
 
-import sunshine.common.ErrorCode;
+import sunshine.common.exception.model.ErrorCode;
 
 /**
  * 데이터베이스 관련 작업 중 발생하는 예외.

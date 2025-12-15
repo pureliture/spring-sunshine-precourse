@@ -1,4 +1,6 @@
-package sunshine.common;
+package sunshine.common.response;
+
+import sunshine.common.exception.model.ErrorCode;
 
 import java.util.Map;
 

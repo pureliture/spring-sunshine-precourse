@@ -4,8 +4,8 @@ import java.util.Objects;
 import org.springframework.stereotype.Component;
 import sunshine.city.domain.City;
 import sunshine.city.repository.CityRepository;
-import sunshine.common.BusinessException;
-import sunshine.common.ErrorCode;
+import sunshine.common.exception.model.BusinessException;
+import sunshine.common.exception.model.ErrorCode;
 
 /**
  * 도시 이름을 기반으로 해당 도시의 정보를 제공하는 컴포넌트.
@@ -27,10 +27,8 @@ public class CityCoordinateMapper {
       throw new IllegalArgumentException("City name cannot be null");
     }
 
-    City city = cityRepository.findByName(cityName.toLowerCase());
-    if (city == null) {
-      throw new BusinessException(ErrorCode.UNSUPPORTED_CITY);
-    }
+    City city = cityRepository.findByName(cityName.toLowerCase())
+            .orElseThrow(() -> new BusinessException(ErrorCode.UNSUPPORTED_CITY));
 
     return new Coordinate(city.getLatitude(), city.getLongitude());
   }
