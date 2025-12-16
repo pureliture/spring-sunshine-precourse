@@ -1,18 +1,37 @@
 <html>
 <body>
 <h1>날씨 정보 조회</h1>
+<!--<form action="/weather" method="get">-->
+<!--    <label for="city">도시:</label>-->
+<!--    <select id="city" name="city">-->
+<!--        <option value="Seoul" th:selected="${selected == 'Seoul'}">Seoul</option>-->
+<!--        <option value="Tokyo" th:selected="${selected == 'Tokyo'}">Tokyo</option>-->
+<!--        <option value="NewYork" th:selected="${selected == 'NewYork'}">NewYork</option>-->
+<!--        <option value="Paris" th:selected="${selected == 'Paris'}">Paris</option>-->
+<!--        <option value="London" th:selected="${selected == 'London'}">London</option>-->
+<!--    </select>-->
+<!--    <button type="submit">확인</button>-->
+<!--</form>-->
+
 <form action="/weather" method="get">
     <label for="city">도시:</label>
-    <select id="city" name="city">
-        <option value="Seoul" th:selected="${selected == 'Seoul'}">Seoul</option>
-        <option value="Tokyo" th:selected="${selected == 'Tokyo'}">Tokyo</option>
-        <option value="NewYork" th:selected="${selected == 'NewYork'}">NewYork</option>
-        <option value="Paris" th:selected="${selected == 'Paris'}">Paris</option>
-        <option value="London" th:selected="${selected == 'London'}">London</option>
+    <input
+            type="text"
+            id="city"
+            name="city"
+            placeholder="도시명을 입력하세요"
+            th:value="${selected}"
+    />
+
+    <label for="flag">모드:</label>
+    <select id="flag" name="flag">
+        <option value="oldschool" th:selected="${flag == 'oldschool' or flag == null}">기본</option>
+        <option value="newschool" th:selected="${flag == 'newschool'}">AI 추천</option>
     </select>
+
     <button type="submit">확인</button>
 </form>
 
-<p>날씨: <span th:text="${weather}"></span></p>
+<p>날씨: <span th:text="${result}"></span></p>
 </body>
 </html>
