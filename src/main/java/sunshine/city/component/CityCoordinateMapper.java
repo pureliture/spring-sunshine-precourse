@@ -6,6 +6,7 @@ import sunshine.city.domain.City;
 import sunshine.city.repository.CityRepository;
 import sunshine.common.exception.model.BusinessException;
 import sunshine.common.exception.model.ErrorCode;
+import sunshine.infrastructure.restclient.nominatim.NominatimClient;
 
 /**
  * 도시 이름을 기반으로 해당 도시의 정보를 제공하는 컴포넌트.
@@ -14,9 +15,11 @@ import sunshine.common.exception.model.ErrorCode;
 public class CityCoordinateMapper {
 
   private final CityRepository cityRepository;
+  private final NominatimClient nominatimClient;
 
-  public CityCoordinateMapper(CityRepository cityRepository) {
+  public CityCoordinateMapper(CityRepository cityRepository, NominatimClient nominatimClient) {
     this.cityRepository = cityRepository;
+    this.nominatimClient = nominatimClient;
   }
 
   /**
@@ -27,9 +30,16 @@ public class CityCoordinateMapper {
       throw new IllegalArgumentException("City name cannot be null");
     }
 
-    City city = cityRepository.findByName(cityName.toLowerCase())
-            .orElseThrow(() -> new BusinessException(ErrorCode.UNSUPPORTED_CITY));
-
-    return new Coordinate(city.getLatitude(), city.getLongitude());
+    // 1. Check DB
+    return cityRepository.findByName(cityName.toLowerCase())
+            .map(city -> new Coordinate(city.getLatitude(), city.getLongitude()))
+            .orElseGet(() -> {
+                // 2. Fallback to API
+                Coordinate coord = nominatimClient.search(cityName);
+                if (coord == null) {
+                    throw new BusinessException(ErrorCode.UNSUPPORTED_CITY);
+                }
+                return coord;
+            });
   }
 }

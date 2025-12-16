@@ -3,6 +3,7 @@ package sunshine.weather.service;
 import org.springframework.stereotype.Service;
 import sunshine.city.component.CityCoordinateMapper;
 import sunshine.city.component.Coordinate;
+import sunshine.weather.component.OutfitRecommender;
 import sunshine.weather.component.WeatherSummarizer;
 import sunshine.weather.domain.Weather;
 import sunshine.weather.domain.WeatherReader;
@@ -17,15 +18,18 @@ public class WeatherService {
   private final CityCoordinateMapper cityCoordinateMapper;
   private final WeatherReader weatherReader;
   private final WeatherSummarizer weatherSummarizer;
+  private final OutfitRecommender outfitRecommender;
 
   public WeatherService(
       CityCoordinateMapper cityCoordinateMapper,
       WeatherReader weatherReader,
-      WeatherSummarizer weatherSummarizer
+      WeatherSummarizer weatherSummarizer,
+      OutfitRecommender outfitRecommender
   ) {
     this.cityCoordinateMapper = cityCoordinateMapper;
     this.weatherReader = weatherReader;
     this.weatherSummarizer = weatherSummarizer;
+    this.outfitRecommender = outfitRecommender;
   }
 
   /**
@@ -46,6 +50,8 @@ public class WeatherService {
         weather.weatherCode()
     );
 
-    return new WeatherDto(weather, summary);
+    String recommendation = outfitRecommender.recommend(city, weather);
+
+    return new WeatherDto(weather, summary, recommendation);
   }
 }

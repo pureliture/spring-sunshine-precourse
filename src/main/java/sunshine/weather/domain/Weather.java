@@ -8,12 +8,16 @@ package sunshine.weather.domain;
  * @param humidity            습도 (%)
  * @param windSpeed           풍속 (km/h)
  * @param weatherCode         날씨 코드
+ * @param precipitation       강수량 (mm)
+ * @param maxTemperature      최고 기온 (섭씨)
  */
 public record Weather(
     double temperature,
     double apparentTemperature,
     int humidity,
     double windSpeed,
-    int weatherCode
+    int weatherCode,
+    double precipitation,
+    double maxTemperature
 ) {
 }
