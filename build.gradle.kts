@@ -56,6 +56,10 @@ dependencies {
     // Spring AI
     implementation(platform("org.springframework.ai:spring-ai-bom:1.1.2"))
     implementation("org.springframework.ai:spring-ai-starter-model-google-genai")
+
+    // markdown
+    implementation("org.commonmark:commonmark:0.21.0")
+
 }
 
 kotlin {

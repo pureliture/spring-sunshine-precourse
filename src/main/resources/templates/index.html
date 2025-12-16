@@ -32,6 +32,6 @@
     <button type="submit">확인</button>
 </form>
 
-<p>날씨: <span th:text="${result}"></span></p>
+<p>날씨: <span th:utext="${@markdownUtil.markdown(result)}"></span></p>
 </body>
 </html>
