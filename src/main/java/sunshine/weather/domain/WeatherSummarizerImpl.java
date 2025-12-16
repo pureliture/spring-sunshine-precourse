@@ -1,23 +1,22 @@
-package sunshine.weather.service;
+package sunshine.weather.domain;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import sunshine.city.domain.CityClient;
 import sunshine.city.dto.City;
-import sunshine.weather.domain.WeatherClient;
 import sunshine.weather.dto.Weather;
 import sunshine.weather.enums.WmoCode;
 
 @Service
 @RequiredArgsConstructor
-public class WeatherServiceImpl implements WeatherService{
+public class WeatherSummarizerImpl implements WeatherSummarizer {
 
 	private final CityClient cityClient;
 	private final WeatherClient weatherClient;
 
 	@Override
-	public String getWeather(String city) {
+	public String getWeatherSummary(String city) {
 		City coordinates = cityClient.getCity(city);
 		Weather currentWeather = weatherClient.getWeather(coordinates.lat(), coordinates.lon());
 

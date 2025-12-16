@@ -1,6 +1,4 @@
-package sunshine.weather.service;
-
-import java.util.Map;
+package sunshine.weather.domain;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.metadata.ChatResponseMetadata;
@@ -12,22 +10,19 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import sunshine.city.domain.CityClient;
 import sunshine.city.dto.City;
-import sunshine.weather.ai.WeatherPrompt;
-import sunshine.weather.ai.WeatherTools;
-import sunshine.weather.domain.WeatherClient;
+import sunshine.weather.ai.WeatherSummarizePrompt;
 import sunshine.weather.dto.Weather;
-import sunshine.weather.enums.WmoCode;
 
 @Slf4j
 @Service
-public class WeatherAiServiceImpl implements WeatherService{
+public class WeatherAiSummarizerImpl implements WeatherSummarizer {
 
 	private final ChatClient chatClient;
 	private final CityClient cityClient;
 	private final WeatherClient weatherClient;
 	// private final WeatherTools weatherTools;
 
-	public WeatherAiServiceImpl(ChatClient.Builder chatClient, CityClient cityClient, WeatherClient weatherClient) {
+	public WeatherAiSummarizerImpl(ChatClient.Builder chatClient, CityClient cityClient, WeatherClient weatherClient) {
 		this.chatClient = chatClient.build();
 		this.cityClient = cityClient;
 		this.weatherClient = weatherClient;
@@ -35,12 +30,12 @@ public class WeatherAiServiceImpl implements WeatherService{
 	}
 
 	@Override
-	public String getWeather(String city) {
+	public String getWeatherSummary(String city) {
 		City coordinates = cityClient.getCity(city);
 		Weather currentWeather = weatherClient.getWeather(coordinates.lat(), coordinates.lon());
 
-		PromptTemplate template = new PromptTemplate(WeatherPrompt.PROMPT);
-		String prompt = template.render(WeatherPrompt.getMap(city, currentWeather));
+		PromptTemplate template = new PromptTemplate(WeatherSummarizePrompt.PROMPT);
+		String prompt = template.render(WeatherSummarizePrompt.getMap(city, currentWeather));
 		// String prompt = template.render(WeatherPrompt.getMap(city));
 
 		// 한 번의 호출로 ChatResponse 받기

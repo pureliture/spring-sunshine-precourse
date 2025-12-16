@@ -6,15 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
+import sunshine.weather.domain.WeatherSummarizer;
 import sunshine.weather.service.WeatherService;
-import sunshine.weather.service.WeatherServiceFactory;
-import sunshine.weather.service.WeatherServiceImpl;
 
 @Controller
 @RequiredArgsConstructor
 public class WeatherController {
 
-	private final WeatherServiceFactory weatherServiceFactory;
+	private final WeatherService weatherService;
 
 	@GetMapping("/weather")
 	public String getWeather(
@@ -22,8 +21,7 @@ public class WeatherController {
 		@RequestParam("city") String city,
 		@RequestParam(defaultValue = "oldshcool") String flag
 	) {
-		WeatherService impl = weatherServiceFactory.createImpl(flag);
-		String result = impl.getWeather(city);
+		String result = weatherService.getWeatherInfo(city, flag);
 
 		model.addAttribute("result", result);
 		model.addAttribute("selected", city);
