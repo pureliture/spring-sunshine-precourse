@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpResponse;
+import sunshine.infrastructure.restclient.configuration.RetryInterceptor;
 
 class RetryInterceptorTest {
 

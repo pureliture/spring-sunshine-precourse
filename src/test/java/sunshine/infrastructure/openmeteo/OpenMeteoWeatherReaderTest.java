@@ -15,6 +15,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 import sunshine.common.exception.model.ErrorCode;
 import sunshine.common.exception.model.infrastructure.RestApiException;
+import sunshine.infrastructure.restclient.openmeteo.OpenMeteoWeatherReader;
 import sunshine.weather.domain.Weather;
 
 class OpenMeteoWeatherReaderTest {
