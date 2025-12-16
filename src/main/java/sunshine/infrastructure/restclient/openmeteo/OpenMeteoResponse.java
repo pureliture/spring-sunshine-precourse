@@ -1,4 +1,4 @@
-package sunshine.infrastructure.openmeteo;
+package sunshine.infrastructure.restclient.openmeteo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

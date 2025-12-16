@@ -1,4 +1,4 @@
-package sunshine.infrastructure.openmeteo;
+package sunshine.infrastructure.restclient.openmeteo;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;

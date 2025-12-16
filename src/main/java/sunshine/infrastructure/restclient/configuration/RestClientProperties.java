@@ -1,4 +1,4 @@
-package sunshine.infrastructure.configuration;
+package sunshine.infrastructure.restclient.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

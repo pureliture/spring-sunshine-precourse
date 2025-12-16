@@ -1,4 +1,4 @@
-package sunshine.infrastructure.configuration;
+package sunshine.infrastructure.restclient.configuration;
 
 import io.netty.channel.ChannelOption;
 import java.time.Duration;

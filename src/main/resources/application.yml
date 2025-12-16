@@ -1,6 +1,21 @@
 spring:
   application:
     name: spring-sunshine
+  ai:
+    openai:
+      api-key:
+      base-url: https://openrouter.ai/api/v1
+      chat:
+        completions-path: /chat/completions
+        options:
+          model: x-ai/grok-4.1-fast
+
+    google:
+      genai:
+        api-key:
+        chat:
+          options:
+            model: gemini-2.5-flash-lite
 
 sunshine:
   client:

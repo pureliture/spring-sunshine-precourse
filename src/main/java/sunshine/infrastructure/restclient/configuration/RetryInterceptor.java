@@ -1,4 +1,4 @@
-package sunshine.infrastructure.configuration;
+package sunshine.infrastructure.restclient.configuration;
 
 import java.io.IOException;
 import org.springframework.http.HttpRequest;
