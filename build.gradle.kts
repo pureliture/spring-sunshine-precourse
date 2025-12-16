@@ -36,6 +36,9 @@ dependencies {
     // Spring AI - OpenAI client (OpenRouter 같은 OpenAI-compatible 서버에 연결 가능)
     implementation("org.springframework.ai:spring-ai-starter-model-openai")
 
+    // Cache
+    implementation("com.github.ben-manes.caffeine:caffeine")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.platform:junit-platform-launcher")
     implementation(kotlin("stdlib-jdk8"))

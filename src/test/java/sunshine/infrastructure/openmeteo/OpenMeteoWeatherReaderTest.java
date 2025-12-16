@@ -44,7 +44,8 @@ class OpenMeteoWeatherReaderTest {
                 "relative_humidity_2m": "%",
                 "apparent_temperature": "°C",
                 "weather_code": "wmo code",
-                "wind_speed_10m": "km/h"
+                "wind_speed_10m": "km/h",
+                "precipitation": "mm"
             },
             "current": {
                 "time": "2023-10-27T12:00",
@@ -53,12 +54,25 @@ class OpenMeteoWeatherReaderTest {
                 "relative_humidity_2m": 60,
                 "apparent_temperature": 14.5,
                 "weather_code": 1,
-                "wind_speed_10m": 3.5
+                "wind_speed_10m": 3.5,
+                "precipitation": 0.0
+            },
+            "daily_units": {
+                "time": "iso8601",
+                "temperature_2m_max": "°C"
+            },
+            "daily": {
+                "time": ["2023-10-27"],
+                "temperature_2m_max": [20.0]
             }
         }
     """;
 
-    mockServer.expect(requestTo("https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=127.0&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m"))
+    String expectedUrl = "https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=127.0" +
+                         "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation" +
+                         "&daily=temperature_2m_max&forecast_days=1";
+
+    mockServer.expect(requestTo(expectedUrl))
         .andExpect(method(HttpMethod.GET))
         .andRespond(withSuccess(jsonResponse, MediaType.APPLICATION_JSON));
 
@@ -68,6 +82,8 @@ class OpenMeteoWeatherReaderTest {
     // then
     assertNotNull(weather);
     assertEquals(15.0, weather.temperature());
+    assertEquals(20.0, weather.maxTemperature());
+    assertEquals(0.0, weather.precipitation());
     mockServer.verify();
   }
 
@@ -79,7 +95,11 @@ class OpenMeteoWeatherReaderTest {
     RestClient restClient = builder.build();
     OpenMeteoWeatherReader reader = new OpenMeteoWeatherReader(restClient);
 
-    mockServer.expect(requestTo("https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=127.0&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m"))
+    String expectedUrl = "https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=127.0" +
+                         "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation" +
+                         "&daily=temperature_2m_max&forecast_days=1";
+
+    mockServer.expect(requestTo(expectedUrl))
         .andExpect(method(HttpMethod.GET))
         .andRespond(withServerError());
 

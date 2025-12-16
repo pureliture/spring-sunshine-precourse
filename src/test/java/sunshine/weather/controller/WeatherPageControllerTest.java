@@ -38,9 +38,11 @@ class WeatherPageControllerTest {
   @Test
   void shouldDisplayWeatherInfoWhenCityIsValid() throws Exception {
     String city = "Seoul";
-    Weather weather = new Weather(20.0, 22.0, 50, 10.0, 1);
+    // Updated Weather constructor: temp, feels_like, humidity, wind, code, precipitation, max_temp
+    Weather weather = new Weather(20.0, 22.0, 50, 10.0, 1, 0.0, 25.0);
     String summary = "Sunny in Seoul";
-    WeatherDto weatherDto = new WeatherDto(weather, summary);
+    String recommendation = "Wear a t-shirt";
+    WeatherDto weatherDto = new WeatherDto(weather, summary, recommendation);
 
     given(weatherService.getWeather(city)).willReturn(weatherDto);
 

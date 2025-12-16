@@ -23,14 +23,24 @@ public class OpenMeteoWeatherReader implements WeatherReader {
 
   @Override
   public Weather read(double latitude, double longitude) {
+
     OpenMeteoResponse response = this.fetchWeather(latitude, longitude);
     OpenMeteoResponse.Current current = response.current();
+    OpenMeteoResponse.Daily daily = response.daily();
+
+    double maxTemp = 0.0;
+    if (daily != null && daily.temperature2mMax() != null && daily.temperature2mMax().length > 0) {
+        maxTemp = daily.temperature2mMax()[0];
+    }
+
     return new Weather(
         current.temperature2m(),
         current.apparentTemperature(),
         current.relativeHumidity2m(),
         current.windSpeed10m(),
-        current.weatherCode()
+        current.weatherCode(),
+        current.precipitation(),
+        maxTemp
     );
   }
 
@@ -40,7 +50,9 @@ public class OpenMeteoWeatherReader implements WeatherReader {
             .queryParam("latitude", latitude)
             .queryParam("longitude", longitude)
             .queryParam("current", "temperature_2m,relative_humidity_2m,"
-                    + "apparent_temperature,weather_code,wind_speed_10m")
+                    + "apparent_temperature,weather_code,wind_speed_10m,precipitation")
+            .queryParam("daily", "temperature_2m_max")
+            .queryParam("forecast_days", 1)
             .build()
             .toUriString();
 

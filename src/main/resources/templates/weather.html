@@ -34,19 +34,28 @@
                     <h5 class="card-title" th:text="${weather.summary}">Summary</h5>
                     <ul class="list-group list-group-flush mt-3">
                         <li class="list-group-item">
-                            <strong>Temperature:</strong> <span th:text="${weather.weather.temperature}"></span>°C
+                            <strong>Temperature:</strong> <span th:text="${weather.temperature}"></span>°C
                         </li>
                         <li class="list-group-item">
-                            <strong>Apparent Temperature:</strong> <span th:text="${weather.weather.apparentTemperature}"></span>°C
+                            <strong>Max Temperature:</strong> <span th:text="${weather.maxTemperature}"></span>°C
                         </li>
                         <li class="list-group-item">
-                            <strong>Humidity:</strong> <span th:text="${weather.weather.humidity}"></span>%
+                            <strong>Apparent Temperature:</strong> <span th:text="${weather.apparentTemperature}"></span>°C
                         </li>
                         <li class="list-group-item">
-                            <strong>Wind Speed:</strong> <span th:text="${weather.weather.windSpeed}"></span> km/h
+                            <strong>Humidity:</strong> <span th:text="${weather.humidity}"></span>%
                         </li>
                         <li class="list-group-item">
-                            <strong>Weather Code:</strong> <span th:text="${weather.weather.weatherCode}"></span>
+                            <strong>Wind Speed:</strong> <span th:text="${weather.windSpeed}"></span> km/h
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Precipitation:</strong> <span th:text="${weather.precipitation}"></span> mm
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Weather Code:</strong> <span th:text="${weather.weatherCode}"></span>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Outfit Recommendation:</strong> <span th:text="${weather.outfitRecommendation}"></span>
                         </li>
                     </ul>
                 </div>
