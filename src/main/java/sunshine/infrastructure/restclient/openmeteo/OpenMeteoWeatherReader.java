@@ -23,6 +23,7 @@ public class OpenMeteoWeatherReader implements WeatherReader {
 
   @Override
   public Weather read(double latitude, double longitude) {
+
     OpenMeteoResponse response = this.fetchWeather(latitude, longitude);
     OpenMeteoResponse.Current current = response.current();
     OpenMeteoResponse.Daily daily = response.daily();

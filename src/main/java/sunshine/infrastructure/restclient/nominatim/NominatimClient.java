@@ -20,6 +20,7 @@ public class NominatimClient {
   }
 
   public Coordinate search(String city) {
+
     String url = UriComponentsBuilder.fromHttpUrl(BASE_URL)
             .queryParam("q", city)
             .queryParam("format", "json")
@@ -28,6 +29,7 @@ public class NominatimClient {
             .toUriString();
 
     try {
+
       List<NominatimResponse> responses = restClient.get()
               .uri(url)
               .retrieve()
