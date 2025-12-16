@@ -21,10 +21,10 @@ class ChatClientFactoryTest {
         "geminiChatClient", geminiClient
     );
 
-    LlmProperties propsOpenAi = new LlmProperties("openai");
+    LlmProperties propsOpenAi = new LlmProperties("openai", true);
     ChatClientFactory factoryOpenAi = new ChatClientFactory(clients, propsOpenAi);
 
-    LlmProperties propsGemini = new LlmProperties("gemini");
+    LlmProperties propsGemini = new LlmProperties("gemini", true);
     ChatClientFactory factoryGemini = new ChatClientFactory(clients, propsGemini);
 
     // when & then

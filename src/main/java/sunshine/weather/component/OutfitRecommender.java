@@ -1,9 +1,5 @@
 package sunshine.weather.component;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import java.time.LocalDate;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
@@ -19,47 +15,66 @@ import sunshine.weather.domain.Weather;
 public class OutfitRecommender {
 
     private static final Logger log = LoggerFactory.getLogger(OutfitRecommender.class);
+    static final String DEFAULT_RECOMMENDATION = OutfitRecommendationDefaults.DEFAULT_RECOMMENDATION;
 
     private final ChatClientFactory chatClientFactory;
     private final OutfitRecommendationPrompt promptGenerator;
     private final LlmHistoryRepository llmHistoryRepository;
-
-    // Key: City + Date, Value: Recommendation
-    private final Cache<String, String> cache;
+    private final OutfitRecommendationCache cache;
+    private final OutfitRecommendationValidator validator;
 
     public OutfitRecommender(ChatClientFactory chatClientFactory,
                              OutfitRecommendationPrompt promptGenerator,
-                             LlmHistoryRepository llmHistoryRepository) {
+                             LlmHistoryRepository llmHistoryRepository,
+                             OutfitRecommendationCache cache,
+                             OutfitRecommendationValidator validator) {
         this.chatClientFactory = chatClientFactory;
         this.promptGenerator = promptGenerator;
         this.llmHistoryRepository = llmHistoryRepository;
-        this.cache = Caffeine.newBuilder()
-                .expireAfterWrite(1, TimeUnit.HOURS)
-                .maximumSize(100)
-                .build();
+        this.cache = cache;
+        this.validator = validator;
     }
 
     public String recommend(String city, Weather weather) {
-        String key = city + ":" + LocalDate.now();
-        String cachedRecommendation = cache.getIfPresent(key);
+        validator.validate(city, weather);
+        String cachedRecommendation = cache.getToday(city);
 
         if (cachedRecommendation != null) {
-            logUsage(true, null);
+            this.logUsage(true, null);
             return cachedRecommendation;
         }
 
-        ChatClient client = chatClientFactory.getChatClient();
-        String prompt = promptGenerator.generatePrompt(city, weather.temperature(), weather.maxTemperature(),
-                                                       weather.precipitation(), weather.apparentTemperature(), weather.windSpeed());
+        ChatResponse response = null;
+        String content = DEFAULT_RECOMMENDATION;
 
-        ChatResponse response = client.prompt().user(prompt).call().chatResponse();
+        try {
+            ChatClient client = chatClientFactory.getChatClient();
+            String prompt = promptGenerator.generatePrompt(city, weather.temperature(), weather.maxTemperature(),
+                                                           weather.precipitation(), weather.apparentTemperature(), weather.windSpeed());
 
-        String content = response.getResult().getOutput().getText();
+            response = client.prompt().user(prompt).call().chatResponse();
+            content = safeExtractContent(response);
+        } catch (Exception ex) {
+            log.warn("Failed to get outfit recommendation from AI. Using default recommendation.", ex);
+        }
 
-        cache.put(key, content);
+        cache.putToday(city, content);
         logUsage(false, response);
 
         return content;
+    }
+
+    private String safeExtractContent(ChatResponse response) {
+        if (response == null || response.getResult() == null || response.getResult().getOutput() == null) {
+            return DEFAULT_RECOMMENDATION;
+        }
+
+        String text = response.getResult().getOutput().getText();
+        if (text == null || text.isBlank()) {
+            return DEFAULT_RECOMMENDATION;
+        }
+
+        return text;
     }
 
     private void logUsage(boolean isCached, ChatResponse response) {
@@ -69,17 +84,21 @@ public class OutfitRecommender {
              return;
         }
 
-        Usage usage = response.getMetadata().getUsage();
-        String model = "unknown";
-        int inputTokens = usage.getPromptTokens().intValue();
-        int outputTokens = usage.getCompletionTokens().intValue();
-        int totalTokens = usage.getTotalTokens().intValue();
+        try {
+            Usage usage = (response != null && response.getMetadata() != null) ? response.getMetadata().getUsage() : null;
+            String model = "unknown";
+            int inputTokens = usage != null ? usage.getPromptTokens() : 0;
+            int outputTokens = usage != null ? usage.getCompletionTokens() : 0;
+            int totalTokens = usage != null ? usage.getTotalTokens() : 0;
 
-        double estimatedCost = totalTokens * 0.0001;
+            double estimatedCost = totalTokens * 0.0001;
 
-        log.info("Outfit Recommendation - Cached: No, Input: {}, Output: {}, Total: {}, Cost: ${}",
-                 inputTokens, outputTokens, totalTokens, String.format("%.6f", estimatedCost));
+            log.info("Outfit Recommendation - Cached: No, Input: {}, Output: {}, Total: {}, Cost: ${}",
+                     inputTokens, outputTokens, totalTokens, String.format("%.6f", estimatedCost));
 
-        llmHistoryRepository.save(new LlmHistory("ai", model, inputTokens, outputTokens, totalTokens, estimatedCost, false));
+            llmHistoryRepository.save(new LlmHistory("ai", model, inputTokens, outputTokens, totalTokens, estimatedCost, false));
+        } catch (Exception ex) {
+            log.warn("Failed to log LLM usage for outfit recommendation.", ex);
+        }
     }
 }

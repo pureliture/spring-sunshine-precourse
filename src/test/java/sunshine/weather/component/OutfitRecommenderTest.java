@@ -42,7 +42,9 @@ class OutfitRecommenderTest {
     @DisplayName("캐시에 없으면 LLM을 호출하고 저장한다")
     void recommend_NoCache() {
         // given
-        OutfitRecommender recommender = new OutfitRecommender(chatClientFactory, promptGenerator, llmHistoryRepository);
+        OutfitRecommendationCache cache = new OutfitRecommendationCache();
+        OutfitRecommendationValidator validator = new OutfitRecommendationValidator();
+        OutfitRecommender recommender = new OutfitRecommender(chatClientFactory, promptGenerator, llmHistoryRepository, cache, validator);
         Weather weather = new Weather(20.0, 20.0, 50, 5.0, 0, 0.0, 25.0);
 
         given(chatClientFactory.getChatClient()).willReturn(chatClient);
