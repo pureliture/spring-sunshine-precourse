@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import sunshine.city.domain.CityClient;
 import sunshine.city.dto.City;
 import sunshine.weather.ai.WeatherPrompt;
+import sunshine.weather.ai.WeatherTools;
 import sunshine.weather.domain.WeatherClient;
 import sunshine.weather.dto.Weather;
 import sunshine.weather.enums.WmoCode;
@@ -24,11 +25,13 @@ public class WeatherAiServiceImpl implements WeatherService{
 	private final ChatClient chatClient;
 	private final CityClient cityClient;
 	private final WeatherClient weatherClient;
+	// private final WeatherTools weatherTools;
 
 	public WeatherAiServiceImpl(ChatClient.Builder chatClient, CityClient cityClient, WeatherClient weatherClient) {
 		this.chatClient = chatClient.build();
 		this.cityClient = cityClient;
 		this.weatherClient = weatherClient;
+		// this.weatherTools = weatherTools;
 	}
 
 	@Override
@@ -37,10 +40,14 @@ public class WeatherAiServiceImpl implements WeatherService{
 		Weather currentWeather = weatherClient.getWeather(coordinates.lat(), coordinates.lon());
 
 		PromptTemplate template = new PromptTemplate(WeatherPrompt.PROMPT);
-		String prompt = template.render(WeatherPrompt.getMap(coordinates.name(), currentWeather));
+		String prompt = template.render(WeatherPrompt.getMap(city, currentWeather));
+		// String prompt = template.render(WeatherPrompt.getMap(city));
 
 		// 한 번의 호출로 ChatResponse 받기
-		ChatResponse response = chatClient.prompt(prompt).call().chatResponse();
+		ChatResponse response = chatClient.prompt(prompt)
+			// .tools(new WeatherTools(cityClient, weatherClient))
+			.call()
+			.chatResponse();
 
 		// 로깅
 		ChatResponseMetadata metadata = response.getMetadata();

@@ -9,14 +9,30 @@ public record WeatherPrompt(
 	Weather weather,
 	String rawPrompt)
 {
+	// public static final String PROMPT = """
+	//
+	// 	당신은 날씨 전문가입니다. 반드시 제공된 도구(Tool)를 사용해서 정보를 조회해야 합니다.
+	//
+	// 	## 요청 도시: {cityName}
+	//
+	// 	## 필수 수행 단계:
+	// 	1. getCoordinates 도구를 호출하여 "{cityName}"의 위도/경도를 조회하세요.
+	// 	2. 조회된 좌표로 getWeather 도구를 호출하여 현재 날씨를 조회하세요.
+	// 	3. 조회된 실제 날씨 데이터를 기반으로 아래 내용을 작성하세요:
+	// 	   - 현재 날씨 요약
+	// 	   - 오늘의 복장 추천
+	//
+	// 	도구를 호출하지 않고 응답하지 마세요. 반드시 실제 데이터를 조회한 후 응답하세요.
+	// 	응답은 한국어로, 친근하고 실용적인 톤으로 작성해주세요.
+	// 	""";
 
 	public static final String PROMPT = """
 		당신은 날씨 전문가입니다.
 		아래 날씨 정보를 바탕으로 두 가지를 제공해주세요:
 		1. 현재 날씨 요약
 		2. 오늘의 복장 추천
-		
-		## 현재 날씨 정보
+
+	## 현재 날씨 정보
 		- 도시: {cityName}
 		- 현재 기온: {temperature}{temperatureUnit}
 		- 체감 온도: {apparentTemperature}{apparentTemperatureUnit}
@@ -28,7 +44,7 @@ public record WeatherPrompt(
 		- 적설량: {snowfall}{snowfallUnit}
 		- 풍속: {windSpeed}{windSpeedUnit}
 		- 돌풍: {windGusts}{windGustsUnit}
-		
+
 		위 정보를 바탕으로 날씨 요약과 복장 추천을 해주세요.
 		응답은 한국어로 작성하고, 친근하고 실용적인 톤으로 작성해주세요.
 		""";
